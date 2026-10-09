@@ -17,7 +17,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-  <!-- MapmyIndia (Mappls) Live SDK with Your API Key -->
+  <!-- MapmyIndia (Mappls) Live SDK -->
   <script src="https://apis.mappls.com/advancedmaps/api/vfsrbnhjdotpfjskxrfizvdcljvmnqayogml/map_sdk?layer=vector&v=3.0" defer></script>
 </head>
 <body>
@@ -25,8 +25,8 @@
   <!-- Invisible reCAPTCHA Container -->
   <div id="recaptcha-container"></div>
 
-  <!-- FIRST-LAUNCH MANDATORY TERMS & CONDITIONS POPUP (PLAY STORE & KYC COMPLIANCE) -->
-  <div id="mandatoryTermsModal" class="mandatory-terms-overlay">
+  <!-- 1. MANDATORY TERMS & CONDITIONS FIRST-LAUNCH POPUP -->
+  <div id="mandatoryTermsModal" class="mandatory-terms-overlay" style="display: flex;">
     <div class="mandatory-terms-card">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E2E8F0; padding-bottom:8px;">
         <h3 style="color:#0A192F; font-size:15.5px; font-weight:800;">🛡️ DoorSeva Terms & User Agreement</h3>
@@ -53,8 +53,58 @@
       </label>
 
       <button type="button" class="btn-book-final" onclick="acceptMandatoryTerms()">
-        Accept & Enter DoorSeva →
+        Accept & Continue →
       </button>
+    </div>
+  </div>
+
+  <!-- 2. NATIVE OTP LOGIN & REGISTER MODAL (FAST2SMS VERIFIED) -->
+  <div id="authModal" class="account-drawer-overlay" style="display: none; align-items: center; justify-content: center; padding: 16px; z-index: 10001;">
+    <div class="modal-card-box" style="max-width: 400px; width: 100%; text-align: center;">
+      <div class="modal-card-header" style="justify-content: center; position: relative;">
+        <h3 style="color: #2A0845; font-size: 18px; font-weight: 800;">🔐 DoorSeva Login / Register</h3>
+        <button onclick="closeAuthModal()" class="modal-btn-close" style="position: absolute; right: 0;">✕</button>
+      </div>
+
+      <p style="font-size: 12px; color: #64748B; margin: 10px 0 16px;">
+        Ghar ki sabhi services ke liye apna 10-digit mobile number darj karke OTP prapt karein.
+      </p>
+
+      <!-- Step A: Enter Phone Number -->
+      <div id="authPhoneStep">
+        <div class="form-group" style="text-align: left; margin-bottom: 14px;">
+          <label class="field-label">Mobile Number:</label>
+          <div style="display: flex; gap: 8px;">
+            <span style="background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px; font-weight: 700; font-size: 14px; display: flex; align-items: center;">+91</span>
+            <input type="tel" id="loginMobileInput" class="form-input" placeholder="10-digit mobile number" maxlength="10" style="font-size: 16px; font-weight: 700; letter-spacing: 1px;" />
+          </div>
+        </div>
+
+        <button type="button" id="btnSendOtp" class="btn-book-final" onclick="requestFast2SmsOtp()">
+          Send 6-Digit OTP 📩
+        </button>
+      </div>
+
+      <!-- Step B: Enter 6-Digit OTP -->
+      <div id="authOtpStep" style="display: none;">
+        <div class="form-group" style="text-align: left; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label class="field-label">Enter 6-Digit OTP:</label>
+            <span id="otpTimerDisplay" style="font-size: 11px; color: #DC2626; font-weight: 700;">60s</span>
+          </div>
+          <input type="tel" id="loginOtpInput" class="form-input" placeholder="• • • • • •" maxlength="6" style="text-align: center; font-size: 20px; font-weight: 800; letter-spacing: 6px;" />
+        </div>
+
+        <button type="button" id="btnVerifyOtp" class="btn-book-final" onclick="verifyReceivedOtp()">
+          Verify OTP & Login 🚀
+        </button>
+
+        <div style="margin-top: 12px;">
+          <button type="button" id="btnResendOtp" onclick="requestFast2SmsOtp()" disabled style="background: none; border: none; font-size: 12px; color: #64748B; font-weight: 700; cursor: pointer;">
+            Resend OTP
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -111,7 +161,7 @@
       </button>
     </div>
 
-    <!-- QUICK CATEGORY TABS (5 Updated Tabs) -->
+    <!-- QUICK CATEGORY TABS (5 Clusters) -->
     <div class="fk-quick-tabs" id="quickCategoryTabs">
       <div class="fk-tab-chip active" id="tab_ALL" onclick="filterByCluster('ALL')">
         <span class="fk-tab-icon">✨</span>
@@ -168,14 +218,12 @@
       </p>
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-        <!-- Voice Mic -->
         <div class="dai-action-card" onclick="startVoiceRecognition()">
           <div class="dai-icon-circle" id="micIconCircle">🎙️</div>
           <strong style="font-size:13px; color:#1E1B4B; display:block; margin-top:6px;">Boliye (Mic)</strong>
           <span style="font-size:10.5px; color:#6B7280;" id="micStatusText">Tap karke bole</span>
         </div>
 
-        <!-- Camera / Photo -->
         <div class="dai-action-card" onclick="triggerAiPhotoUpload()">
           <div class="dai-icon-circle">📸</div>
           <strong style="font-size:13px; color:#1E1B4B; display:block; margin-top:6px;">Photo / Camera</strong>
@@ -188,7 +236,7 @@
     </div>
   </div>
 
-  <!-- BOOKING CUSTOMIZATION NEXT WINDOW MODAL -->
+  <!-- BOOKING CUSTOMIZATION MODAL -->
   <div id="nextBookingWindowModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 12px;">
     <div class="modal-card-box" style="max-width: 580px; width: 100%; max-height: 94vh; display: flex; flex-direction: column;">
       <div class="modal-card-header">
@@ -206,8 +254,6 @@
 
         <!-- 2-COLUMN SPLIT: LEFT (Quantity) & RIGHT (Calendar Date) -->
         <div class="booking-split-row" style="display:flex; gap:12px; margin-top:12px;">
-          
-          <!-- LEFT: Dynamic Quantity Selector -->
           <div class="booking-split-col" id="colQuantityContainer" style="flex:1;">
             <label class="booking-sec-label" id="modalQuantityTitle">Quantity:</label>
             <div class="quantity-counter-box" style="display:flex; align-items:center; gap:10px; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:6px 12px; width:fit-content;">
@@ -218,7 +264,6 @@
             <span id="modalQuantitySub" style="font-size:10px; color:#64748B; display:block; margin-top:4px;">Select count</span>
           </div>
 
-          <!-- RIGHT: Advance Booking Calendar Date Picker -->
           <div class="booking-split-col" style="flex:1;">
             <label class="booking-sec-label" id="modalCalendarLabel">Booking Date (Calendar):</label>
             <input type="date" id="bookingScheduleDate" class="form-input" style="padding:7px 10px; font-weight:700;" />
@@ -227,13 +272,11 @@
 
         <!-- FORM FIELDS -->
         <div class="booking-form-fields" style="margin-top:14px;">
-          <!-- Customer Name -->
           <div class="form-group" style="margin-bottom:8px;">
             <label class="field-label">Full Name:</label>
             <input type="text" id="custNameInput" class="form-input" placeholder="Your full name" />
           </div>
 
-          <!-- Mobile Number with Female Partner Notice -->
           <div class="form-group" style="margin-bottom:8px;">
             <label class="field-label">Mobile Number:</label>
             <input type="tel" id="custPhoneInput" class="form-input" placeholder="10-digit mobile number" maxlength="10" />
@@ -242,19 +285,16 @@
             </div>
           </div>
 
-          <!-- Full Address -->
           <div class="form-group" style="margin-bottom:8px;">
             <label class="field-label">Service Address (Ghar ka pata):</label>
             <textarea id="custAddressInput" class="form-textarea" rows="2" placeholder="House number, landmark, street..."></textarea>
           </div>
 
-          <!-- Description Box -->
           <div class="form-group" style="margin-bottom:8px;">
             <label class="field-label">Service Requirement Details (A to Z Description):</label>
             <textarea id="custDescriptionInput" class="form-textarea" rows="2" placeholder="Apni zarurat aur service detail yahan likhein..."></textarea>
           </div>
 
-          <!-- Prescription / Photo Upload Section -->
           <div id="uploadAttachmentContainer" class="form-group" style="margin-bottom:8px; display:none;">
             <label class="field-label" id="uploadAttachmentLabel">Upload Document / Photo:</label>
             <input type="file" id="custAttachmentFile" class="form-input" style="padding:6px;" />
@@ -284,15 +324,12 @@
         <button onclick="closeCartScreen()" class="modal-btn-close">✕</button>
       </div>
 
-      <!-- Home Nursing Advisory -->
       <div id="nursingNoticeInCart" style="display:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:6px; padding:8px; font-size:11px; color:#1E40AF; margin-bottom:10px;">
         🩺 <strong>Doctor's Prescription Notice:</strong> Nursing services require verified doctor instructions at the time of visit.
       </div>
 
-      <!-- Items List -->
       <div id="cartItemsList" style="overflow-y:auto; flex:1; max-height:360px; margin-bottom:12px;"></div>
 
-      <!-- Cart Summary Calculation -->
       <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:10px; margin-bottom:12px;">
         <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
           <span>Items Total (Standard COD):</span>
@@ -304,7 +341,6 @@
         </div>
       </div>
 
-      <!-- Payment Choice & Checkout -->
       <div style="display:flex; gap:10px;">
         <button class="btn-checkout-cod" onclick="executeCheckout('COD')" style="flex:1;">
           💵 Cash on Delivery (COD)
@@ -316,7 +352,7 @@
     </div>
   </div>
 
-  <!-- FINTECH WALLET MODAL (BANK IFSC & UPI DESTINATION) -->
+  <!-- FINTECH WALLET MODAL -->
   <div id="walletModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 16px;">
     <div class="modal-card-box" style="max-width: 460px; width: 100%; max-height: 90vh; overflow-y: auto;">
       <div class="modal-card-header">
@@ -324,7 +360,6 @@
         <button onclick="closeWalletModal()" class="modal-btn-close">✕</button>
       </div>
 
-      <!-- Wallet Balance Header Card -->
       <div class="wallet-card-summary">
         <div class="wallet-bal-label">Available Refund & Cashout Balance</div>
         <div class="wallet-bal-amount" id="userWalletBalDisplay">₹0</div>
@@ -335,8 +370,416 @@
         </div>
       </div>
 
-      <!-- Saved Payout Confirmation -->
       <div id="savedPayoutContainer" style="display:none;"></div>
 
-      <!-- Form: Add Bank Details (With Live IFSC Verification) -->
-      <div id="payoutBankForm" style="display:none
+      <div id="payoutBankForm" style="display:none; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:12px; margin-bottom:12px;">
+        <h4 style="font-size:13px; color:#0A192F; margin-bottom:8px;">Add Bank Account Details:</h4>
+        <form onsubmit="validateAndSaveBankDetails(event)">
+          <div class="form-group">
+            <label class="field-label">Account Holder Full Name:</label>
+            <input type="text" id="bankHolderName" class="form-input" placeholder="Name as per passbook" required />
+          </div>
+          <div class="form-group">
+            <label class="field-label">Bank Account Number:</label>
+            <input type="password" id="bankAccNum" class="form-input" placeholder="Account Number" required />
+          </div>
+          <div class="form-group">
+            <label class="field-label">Re-enter Account Number:</label>
+            <input type="text" id="bankAccNumConfirm" class="form-input" placeholder="Confirm Account Number" required />
+          </div>
+          <div class="form-group">
+            <label class="field-label">11-Digit IFSC Code:</label>
+            <input type="text" id="bankIfscCode" class="form-input" placeholder="e.g. SBIN0001234" maxlength="11" style="text-transform:uppercase;" required />
+            <span style="font-size:10px; color:#64748B;">*Strict RBI directory verification will run automatically</span>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+            <button type="button" class="btn-back" onclick="document.getElementById('payoutBankForm').style.display='none'">Cancel</button>
+            <button type="submit" class="btn-book-now-solid" style="padding:6px 14px; font-size:12px;">Verify & Save Bank</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="payoutUpiForm" style="display:none; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:12px; margin-bottom:12px;">
+        <h4 style="font-size:13px; color:#0A192F; margin-bottom:8px;">Add Virtual Payment Address (UPI):</h4>
+        <form onsubmit="validateAndSaveUpiDetails(event)">
+          <div class="form-group">
+            <label class="field-label">UPI ID:</label>
+            <input type="text" id="upiIdInput" class="form-input" placeholder="e.g. 9837640595@paytm" required />
+          </div>
+          <div class="form-group">
+            <label class="field-label">Confirm UPI ID:</label>
+            <input type="text" id="upiIdConfirmInput" class="form-input" placeholder="Re-enter UPI ID" required />
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+            <button type="button" class="btn-back" onclick="document.getElementById('payoutUpiForm').style.display='none'">Cancel</button>
+            <button type="submit" class="btn-book-now-solid" style="padding:6px 14px; font-size:12px;">Verify & Save UPI</button>
+          </div>
+        </form>
+      </div>
+
+      <p style="font-size:11px; color:#64748B; line-height:1.4;">
+        🔒 All withdrawals are processed instantly powered by Razorpay Payouts directly to your verified bank or UPI destination.
+      </p>
+    </div>
+  </div>
+
+  <!-- CANCEL SUBSCRIPTION MODAL -->
+  <div id="cancelSubscriptionModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 16px;">
+    <div class="modal-card-box" style="max-width: 440px;">
+      <div class="modal-card-header">
+        <h3 id="ui-cancelModalTitle">Cancel Subscription Plan</h3>
+        <button onclick="closeCancelModal()" class="modal-btn-close">✕</button>
+      </div>
+      <p id="ui-cancelModalDesc" style="font-size:11.5px; color:#475569; margin-bottom:10px; line-height:1.4;"></p>
+      <div class="form-group">
+        <label class="field-label" id="ui-cancelReasonLabel">Reason for Cancellation:</label>
+        <textarea id="cancelReasonInput" class="form-textarea" rows="3"></textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:12px;">
+        <button id="ui-cancelBack" onclick="closeCancelModal()" class="btn-back" style="margin-bottom:0;">Go Back</button>
+        <button id="ui-cancelConfirm" onclick="confirmSubscriptionCancel()" class="btn-book-final" style="background:#DC2626; width:auto; padding:8px 16px;">Confirm Cancellation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div id="editProfileModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 16px;">
+    <div class="modal-card-box" style="max-width: 440px; max-height:90vh; overflow-y:auto;">
+      <div class="modal-card-header">
+        <h3 id="ui-profTitle">Edit Profile Details</h3>
+        <button onclick="document.getElementById('editProfileModal').style.display='none'" class="modal-btn-close">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="field-label">Full Name:</label>
+        <input type="text" id="profEditName" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label class="field-label">Mobile Number:</label>
+        <input type="tel" id="profEditPhone" class="form-input" readonly style="background:#F1F5F9;" />
+      </div>
+      <div class="form-group">
+        <label class="field-label">Email Address:</label>
+        <input type="email" id="profEditEmail" class="form-input" placeholder="e.g. name@gmail.com" />
+      </div>
+      <div style="display:flex; gap:10px;">
+        <div class="form-group" style="flex:1;">
+          <label class="field-label">Gender:</label>
+          <select id="profEditGender" class="form-input">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="field-label">Age:</label>
+          <input type="number" id="profEditAge" class="form-input" placeholder="e.g. 28" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="field-label">Permanent Address:</label>
+        <textarea id="profEditAddress" class="form-textarea" rows="2"></textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+        <button class="btn-back" onclick="document.getElementById('editProfileModal').style.display='none'">Cancel</button>
+        <button class="btn-book-final" style="width:auto; padding:8px 18px;" onclick="saveProfileChanges()">Save Details</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="legal-footer">
+    <div class="container">
+      <div class="footer-grid-balanced">
+        <div class="footer-col">
+          <div class="footer-heading" id="footer-about-title">About DoorSeva</div>
+          <p class="footer-text" id="footer-about-desc">
+            DoorSeva is an on-demand verified home & healthcare services marketplace operated by Sachint Enterprises. Certified professionals delivered directly to your doorstep.
+          </p>
+          <div class="footer-legal-tag">
+            <strong id="footer-legal-title">Legal Entity:</strong> SACHINT ENTERPRISES<br />
+            <strong>GSTIN:</strong> 09IATPS9376A1ZR
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-heading" id="footer-services-title">Services Fleet</div>
+          <ul class="footer-links">
+            <li id="fl-nursing">Clinical Home Nursing & Dressing</li>
+            <li id="fl-maintenance">Electrician, Plumber & Carpenter</li>
+            <li id="fl-appliance">AC, Fridge & Washing Machine Repair</li>
+            <li id="fl-women">Women Beauty, Salon & Tailoring</li>
+            <li id="fl-labour">Daily Labour & Skilled Mason</li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-heading" id="footer-policies-title">Legal & Compliance</div>
+          <ul class="footer-links">
+            <li><a href="#" id="fl-about" onclick="openPolicyModal('about')">About Us</a></li>
+            <li><a href="#" id="fl-terms" onclick="openPolicyModal('terms')">Terms & Conditions</a></li>
+            <li><a href="#" id="fl-privacy" onclick="openPolicyModal('privacy')">Privacy Policy</a></li>
+            <li><a href="#" id="fl-refund" onclick="openPolicyModal('refund')">Refund & Cancellation</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-heading" id="footer-office-title">Support & Office</div>
+          <address class="footer-address">
+            <strong>Sachint Enterprises</strong><br />
+            Nejo Wali Gawri, Near Lov Nursing Home,<br />
+            Nagina, District Bijnor, Uttar Pradesh - 246762
+          </address>
+          <div class="footer-contact-box" style="margin-top: 8px;">
+            <p>📞 <strong id="fl-helpline">Helpline:</strong> +91 8218439129</p>
+            <p>✉️ <strong id="fl-email">Official Email:</strong> doorseva@gmail.com</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom-strip">
+        <div class="copyright-text">
+          © 2026 Sachint Enterprises (doorseva.in). All Rights Reserved.
+        </div>
+        <div class="security-badge" id="ui-secureBadge">
+          🔒 100% Secured Payments Powered by Razorpay
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- DRAWER -->
+  <div class="account-drawer-overlay" id="accountDrawerOverlay">
+    <div class="account-drawer">
+      <div class="drawer-header">
+        <button class="drawer-close" onclick="closeDrawer()">✕</button>
+        <div class="drawer-user-section">
+          <div class="drawer-user-info" onclick="openEditProfileModal()" style="cursor: pointer;">
+            <div class="user-logo-circle" id="drawerUserAvatar">👤</div>
+            <div>
+              <div class="user-status" id="drawerUserName">DoorSeva Customer ✏️</div>
+              <div class="user-substatus" id="drawerUserPhone">Tap to Login</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="drawer-menu-list">
+        <div class="drawer-section-title" id="ui-drawerSec1">Orders & Wallet</div>
+        <div class="menu-item" onclick="openMyBookingsModal()">
+          <div class="item-main">
+            <span class="menu-icon">📋</span>
+            <div>
+              <div class="item-title" id="ui-menuBookings">My Bookings & History</div>
+              <div class="item-sub" id="ui-menuBookingsSub">Active orders, invoice & secret PIN</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="menu-item" onclick="openDrawerAction('wallet')">
+          <div class="item-main">
+            <span class="menu-icon">👛</span>
+            <div>
+              <div class="item-title" id="ui-menuWallet">DoorSeva Wallet</div>
+              <div class="item-sub" id="ui-menuWalletSub">Refund & Cashout Balance</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="drawer-section-title" id="ui-drawerSec2">Fleet Partnership</div>
+        <div class="menu-item" onclick="alert('DoorSeva Fleet Partner Program: Earn guaranteed 85% net on every booking! Helpline: +91 8218439129')">
+          <div class="item-main">
+            <span class="menu-icon">🤝</span>
+            <div>
+              <div class="item-title" id="ui-menuPartner">Become a DoorSeva Partner</div>
+              <div class="item-sub" id="ui-menuPartnerSub">Join as Nurse, Electrician, Plumber or Mason</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="drawer-section-title" id="ui-drawerSec3">Helpdesk & Policies</div>
+        <div class="menu-item" onclick="window.open('https://wa.me/918218439129')">
+          <div class="item-main">
+            <span class="menu-icon">🎧</span>
+            <div>
+              <div class="item-title" id="ui-menuSupport">Help & Support Desk</div>
+              <div class="item-sub" id="ui-menuSupportSub">24x7 WhatsApp Chat & Phone Support</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="menu-item" onclick="openPolicyModal('terms')">
+          <div class="item-main">
+            <span class="menu-icon">📄</span>
+            <div>
+              <div class="item-title" id="ui-menuTerms">Terms & Conditions</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="menu-item" onclick="openPolicyModal('privacy')">
+          <div class="item-main">
+            <span class="menu-icon">🔒</span>
+            <div>
+              <div class="item-title" id="ui-menuPrivacy">Privacy Policy</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="menu-item" onclick="openEditProfileModal()">
+          <div class="item-main">
+            <span class="menu-icon">⚙️</span>
+            <div>
+              <div class="item-title" id="ui-menuProfile">Edit Profile & Photo</div>
+              <div class="item-sub" id="ui-menuProfileSub">Update name and profile photo</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="menu-item" onclick="openDrawerAction('login')">
+          <div class="item-main">
+            <span class="menu-icon">📱</span>
+            <div>
+              <div class="item-title" id="ui-menuLoginToggle">Login / Switch Account</div>
+              <div class="item-sub">Login with Fast2SMS OTP</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="menu-item" onclick="openDrawerAction('logout')">
+          <div class="item-main">
+            <span class="menu-icon">🚪</span>
+            <div>
+              <div class="item-title" id="ui-menuLogout" style="color: #D97706;">Log Out</div>
+              <div class="item-sub" id="ui-menuLogoutSub">Clear session</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+
+        <div class="menu-item" onclick="openDrawerAction('deleteAccount')">
+          <div class="item-main">
+            <span class="menu-icon">🗑</span>
+            <div>
+              <div class="item-title danger-text" id="ui-menuDelete">Delete Account & Data</div>
+              <div class="item-sub" id="ui-menuDeleteSub">Google Play Compliance Request</div>
+            </div>
+          </div>
+          <span class="item-arrow">›</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOCATION PINCODE MODAL -->
+  <div id="cityModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 20px;">
+    <div class="modal-card-box">
+      <div class="modal-card-header">
+        <h3 id="ui-modalCityTitle">Delivery Location Verification</h3>
+        <button onclick="closeCityModal()" class="modal-btn-close">✕</button>
+      </div>
+      <p style="font-size: 11.5px; color: #475569; margin-bottom: 12px; line-height: 1.4;" id="ui-modalCityDesc">
+        Enter your 6-digit delivery PIN code:
+      </p>
+      <div style="position: relative; margin-bottom: 12px;">
+        <input type="tel" id="manualCityInput" class="form-input" maxlength="6" placeholder="e.g. 246762" style="font-size: 15px; font-weight: 700; letter-spacing: 1px;" />
+      </div>
+      <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+        <button type="button" id="ui-modalDeviceGps" onclick="triggerGpsAutoDetect(); closeCityModal();" style="flex: 1; padding: 8px; background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; border-radius: 6px; font-size: 11.5px; font-weight: 800; cursor: pointer;">
+          🎯 Use Device Live GPS
+        </button>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button onclick="closeCityModal()" class="btn-back" id="ui-cityCancel" style="margin-bottom: 0;">Cancel</button>
+        <button onclick="confirmManualPinCode()" class="btn-book-final" id="ui-cityVerify" style="width: auto; padding: 8px 20px;">Verify & Lock PIN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLINICAL ADVISORY MODAL -->
+  <div id="medicalAdvisoryModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 16px;">
+    <div class="modal-card-box" style="max-width: 500px; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 8px; margin-bottom: 10px;">
+        <div id="ui-medTitle" style="font-size: 15.5px; font-weight: 800; color: #0A192F;">
+          🩺 Clinical Home Nursing & Service Terms Advisory
+        </div>
+        <button onclick="closeMedicalModal()" class="modal-btn-close">✕</button>
+      </div>
+      <div id="ui-medBody" style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 8px; padding: 12px; font-size: 11.5px; color: #334155; line-height: 1.55; overflow-y: auto; flex: 1; max-height: 360px; margin-bottom: 12px;"></div>
+      <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; font-weight: 700; color: #0A192F; margin-bottom: 14px; cursor: pointer; user-select: none;">
+        <input type="checkbox" id="chkMedicalConsent" style="margin-top: 2px;" onchange="document.getElementById('btnProceedNursing').disabled = !this.checked;" />
+        <span id="ui-medConsent">I Understand & Accept All Clinical, Payment & Refund Terms</span>
+      </label>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button id="ui-medCancel" onclick="closeMedicalModal()" class="btn-back" style="margin-bottom: 0;">Cancel</button>
+        <button id="btnProceedNursing" onclick="acceptMedicalAdvisory()" disabled class="btn-book-final" style="width: auto; padding: 8px 20px;">Proceed to Plans →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POLICY MODAL -->
+  <div id="policyModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 16px;">
+    <div class="modal-card-box" style="max-width: 500px; width: 100%; max-height: 85vh; display: flex; flex-direction: column;">
+      <div class="modal-card-header">
+        <h3 id="policyModalTitle" style="color: #2A0845;">Legal & Policy</h3>
+        <button onclick="document.getElementById('policyModal').style.display='none'" class="modal-btn-close">✕</button>
+      </div>
+      <div id="policyModalContent" style="overflow-y: auto; flex: 1; font-size: 12px; line-height: 1.6; color: #334155; padding: 10px 0;"></div>
+    </div>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    window.openEditProfileModal = function() {
+      const modal = document.getElementById("editProfileModal");
+      if (!modal) return;
+      document.getElementById("profEditName").value = (window.state && state.currentUser && state.currentUser.name) || "";
+      document.getElementById("profEditPhone").value = (window.state && state.currentUser && state.currentUser.phone) || "";
+      document.getElementById("profEditEmail").value = (window.state && state.currentUser && state.currentUser.email) || "";
+      document.getElementById("profEditGender").value = (window.state && state.currentUser && state.currentUser.gender) || "Male";
+      document.getElementById("profEditAge").value = (window.state && state.currentUser && state.currentUser.age) || "";
+      document.getElementById("profEditAddress").value = (window.state && state.currentUser && state.currentUser.address) || "";
+      modal.style.display = "flex";
+    };
+
+    window.saveProfileChanges = function() {
+      const name = document.getElementById("profEditName").value.trim();
+      const email = document.getElementById("profEditEmail").value.trim();
+      const gender = document.getElementById("profEditGender").value;
+      const age = document.getElementById("profEditAge").value.trim();
+      const addr = document.getElementById("profEditAddress").value.trim();
+
+      if (window.state && state.currentUser) {
+        if (name) state.currentUser.name = name;
+        state.currentUser.email = email;
+        state.currentUser.gender = gender;
+        state.currentUser.age = age;
+        if (addr) state.currentUser.address = addr;
+      }
+
+      localStorage.setItem("doorseva_user_name", name);
+      localStorage.setItem("doorseva_user_email", email);
+      localStorage.setItem("doorseva_user_gender", gender);
+      localStorage.setItem("doorseva_user_age", age);
+      localStorage.setItem("doorseva_user_address", addr);
+
+      if (typeof updateDrawerUserProfileUI === "function") {
+        updateDrawerUserProfileUI();
+      }
+      document.getElementById("editProfileModal").style.display = "none";
+      alert("✅ Profile details updated successfully!");
+    };
+  </script>
+
+</body>
+</html>
