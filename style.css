@@ -1,0 +1,814 @@
+/**
+ * DoorSeva (doorseva.in) - Master Commercial Stylesheet
+ * Entity: Sachint Enterprises (GSTIN: 09IATPS9376A1ZR)
+ * Enhanced: 2-Card Mobile Grid, Dual Pricing, Fintech Wallet, Mandatory Terms Modal & Universal Cart
+ */
+
+:root {
+  --navy-dark: #0A192F;
+  --primary-purple: #2A0845;
+  --primary-gradient: linear-gradient(135deg, #2A0845 0%, #4B1278 100%);
+  --flipkart-blue: #0284C7;
+  --accent-green: #16A34A;
+  --btn-green: #22C55E;
+  --warning-amber: #D97706;
+  --danger-red: #DC2626;
+  --bg-page: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --border-light: #E2E8F0;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --card-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-page);
+  line-height: 1.45;
+  padding-bottom: 30px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 12px 16px;
+}
+
+.text-center { text-align: center; }
+
+/* 1. TOP NAVBAR */
+.fk-top-header {
+  background: var(--primary-gradient);
+  color: #FFFFFF;
+  padding: 10px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.fk-brand-row {
+  max-width: 1240px;
+  margin: 0 auto 8px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fk-logo-area { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.fk-logo-icon { font-size: 22px; }
+.fk-logo-text { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
+
+.fk-header-actions { display: flex; align-items: center; gap: 8px; }
+.fk-lang-select {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #FFF;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  outline: none;
+}
+.fk-lang-select option { background: #2A0845; color: #FFF; }
+.fk-btn-account {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #FFF;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* LOCATION STRIP */
+.fk-location-strip {
+  max-width: 1240px;
+  margin: 0 auto 8px auto;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.fk-pin-icon { font-size: 16px; }
+.fk-location-texts { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.fk-loc-primary {
+  font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 4px; color: #FFF;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fk-loc-secondary {
+  font-size: 11px; opacity: 0.9; color: #E2E8F0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fk-btn-gps {
+  background: #22C55E; color: #000; border: none; padding: 4px 10px;
+  border-radius: 6px; font-size: 10.5px; font-weight: 800; cursor: pointer;
+}
+
+/* SEARCH BAR + D AI BUTTON */
+.fk-search-row-container {
+  max-width: 1240px;
+  margin: 0 auto 8px auto;
+}
+.fk-search-box {
+  background: #FFFFFF;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.fk-search-lens { font-size: 14px; }
+.fk-search-input { border: none; outline: none; width: 100%; font-size: 13.5px; color: #0F172A; }
+
+.btn-dai-pulse {
+  background: linear-gradient(135deg, #FF007A 0%, #7928CA 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 10px rgba(255, 0, 122, 0.35);
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-dai-pulse:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 14px rgba(255, 0, 122, 0.5);
+}
+
+/* HORIZONTAL TABS */
+.fk-quick-tabs {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.fk-quick-tabs::-webkit-scrollbar { display: none; }
+
+.fk-tab-chip {
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #FFF;
+  transition: all 0.2s ease;
+}
+.fk-tab-chip.active { background: #FFFFFF; color: #2A0845; border-color: #FFFFFF; font-weight: 800; }
+
+/* 2. HERO BANNER */
+.hero-slider-section {
+  margin: 10px 0 16px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+.hero-slide-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  min-height: 145px;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+.hero-left-content { flex: 1; max-width: 70%; }
+.hero-badge-tag {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 3px 8px; border-radius: 4px; font-size: 9.5px;
+  font-weight: 800; letter-spacing: 0.5px; display: inline-block; margin-bottom: 4px;
+}
+.hero-main-title { font-size: 21px; font-weight: 900; line-height: 1.25; margin-bottom: 4px; }
+.hero-sub-desc { font-size: 12.5px; opacity: 0.95; margin-bottom: 10px; line-height: 1.35; }
+.hero-btn-book {
+  background: #FFFFFF; color: #0F172A; border: none; padding: 7px 18px;
+  border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer;
+}
+.hero-right-images { width: 105px; height: 105px; }
+.hero-dual-img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 10px; border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 3. RESPONSIVE GRID (EXACT 2 CARDS ON PHONE, 4 ON DESKTOP) */
+.section-headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 18px 0 12px 0;
+}
+.section-headline h2 { font-size: 17px; font-weight: 800; color: #0F172A; }
+.all-india-tag {
+  background: #DCFCE7; color: #166534; padding: 4px 10px;
+  border-radius: 12px; font-size: 9.5px; font-weight: 800;
+}
+
+.fk-grid-container {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+
+/* MOBILE (OnePlus Phone): Exact 2 Cards Side-by-Side */
+@media (max-width: 767px) {
+  .fk-grid-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .fk-card-media { aspect-ratio: 16 / 11; }
+  .fk-card-body { padding: 8px; }
+  .fk-card-title { font-size: 12px; min-height: 32px; line-height: 1.3; }
+  .btn-book-card { padding: 6px; font-size: 11px; }
+}
+
+/* TABLET: 3 Columns */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .fk-grid-container { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+}
+
+/* DESKTOP (Computer / Laptop): 4 Columns */
+@media (min-width: 1024px) {
+  .fk-grid-container { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+}
+
+.fk-card-item {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-light);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+}
+.fk-card-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Toggle Selection State */
+.fk-card-item.selected {
+  border-color: #16A34A !important;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25), 0 8px 20px rgba(0, 0, 0, 0.08);
+  background-color: #F0FDF4;
+}
+
+.fk-card-select-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #16A34A;
+  color: #FFFFFF;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 900;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.fk-card-item.selected .fk-card-select-badge { display: flex; }
+
+.fk-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #F1F5F9;
+  overflow: hidden;
+}
+.fk-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  image-rendering: -webkit-optimize-contrast;
+  transition: transform 0.3s ease;
+}
+.fk-card-item:hover .fk-card-img { transform: scale(1.03); }
+
+.fk-card-badge {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(15, 23, 42, 0.85); color: #FFFFFF; font-size: 9px; font-weight: 800;
+  padding: 3px 7px; border-radius: 4px; backdrop-filter: blur(2px);
+}
+
+.fk-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.fk-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.35;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 36px;
+}
+
+.fk-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+.fk-rating-badge {
+  background: #16A34A; color: #FFFFFF; font-size: 10px;
+  font-weight: 800; padding: 2px 6px; border-radius: 4px;
+}
+.fk-reviews-count { font-size: 10.5px; color: var(--text-muted); }
+
+.fk-action-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-light);
+}
+.fk-view-text { font-size: 12px; font-weight: 800; color: var(--flipkart-blue); }
+.fk-action-arrow { font-size: 16px; color: var(--flipkart-blue); }
+
+.btn-book-card {
+  width: 100%;
+  background: #F1F5F9;
+  color: #0284C7;
+  border: 1px solid #BAE6FD;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-book-card:hover { background: #0284C7; color: #FFFFFF; }
+.fk-card-item.selected .btn-book-card {
+  background: #16A34A;
+  color: #FFFFFF;
+  border-color: #16A34A;
+}
+
+/* DUAL PRICING STYLING (COD vs ONLINE 20% OFF) */
+.price-display-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.price-row-online {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.price-val-online {
+  font-size: 13.5px;
+  font-weight: 900;
+  color: #16A34A;
+}
+.badge-online-off {
+  background: #DCFCE7;
+  color: #15803D;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid #BBF7D0;
+}
+.price-val-cod {
+  font-size: 10.5px;
+  color: #94A3B8;
+  font-weight: 600;
+}
+.price-strike {
+  text-decoration: line-through;
+}
+
+/* FLOATING MULTI-SELECTION ACTION BAR */
+.selection-floating-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1E1B4B;
+  color: #FFFFFF;
+  border-radius: 50px;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.selection-bar-info { font-size: 13px; font-weight: 800; }
+.selection-bar-btns { display: flex; gap: 8px; align-items: center; }
+.btn-clear-selection {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #FFF;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-continue-selection {
+  background: #22C55E;
+  color: #000;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* D AI ASSISTANT MODAL */
+.dai-action-card {
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 18px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.dai-action-card:hover {
+  border-color: #7928CA;
+  background: #FAF5FF;
+  transform: translateY(-2px);
+}
+.dai-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #EEF2FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+/* 4. CUSTOMIZATION & BOOKING MODAL */
+.booking-section-group { margin-bottom: 12px; }
+.booking-sec-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1E293B;
+  margin-bottom: 6px;
+}
+
+.plans-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.plan-chip-item {
+  border: 1.5px solid var(--border-light);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #FFF;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+.plan-chip-item:hover { border-color: var(--flipkart-blue); }
+.plan-chip-item.active {
+  border-color: #16A34A;
+  background: #F0FDF4;
+}
+.plan-chip-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #334155;
+  display: block;
+  margin-bottom: 3px;
+  line-height: 1.25;
+}
+.plan-chip-item.active .plan-chip-title { color: #166534; font-weight: 800; }
+.plan-chip-price { font-size: 13.5px; font-weight: 900; color: #0A192F; }
+
+.btn-qty {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #CBD5E1;
+  background: #FFF;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-qty:active { background: #E2E8F0; }
+
+.field-label {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #334155;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.form-group { margin-bottom: 10px; }
+.form-input, .form-textarea {
+  width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1;
+  border-radius: 8px; font-size: 12.5px; outline: none; background: #FFF;
+}
+.form-input:focus, .form-textarea:focus { border-color: var(--flipkart-blue); }
+
+.btn-add-cart-outline {
+  background: #FFFFFF;
+  border: 1.5px solid #2A0845;
+  color: #2A0845;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-add-cart-outline:hover { background: #F3E8FF; }
+
+.btn-book-now-solid {
+  background: #22C55E;
+  border: 1.5px solid #22C55E;
+  color: #0A192F;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-book-now-solid:hover { background: #16A34A; color: #FFF; }
+
+/* 5. UNIVERSAL CART SYSTEM & CUT (X) STYLING */
+.cart-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 8px;
+  border-bottom: 1px solid #F1F5F9;
+  gap: 10px;
+}
+.cart-item-info { flex: 1; overflow: hidden; }
+.cart-item-title {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cart-item-plan { font-size: 11px; color: #64748B; margin-top: 2px; }
+.cart-item-price-strip { display: flex; align-items: center; gap: 8px; }
+.cart-item-price { font-size: 13.5px; font-weight: 900; color: #0A192F; }
+.btn-cut-item {
+  background: #FEE2E2;
+  border: none;
+  color: #DC2626;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-cut-item:hover { background: #DC2626; color: #FFF; }
+
+.btn-checkout-cod {
+  background: #F1F5F9;
+  color: #0F172A;
+  border: 1.5px solid #CBD5E1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn-checkout-online {
+  background: #0A192F;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* 6. MODALS & DRAWER */
+.account-drawer-overlay {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px); z-index: 2000; display: none; justify-content: flex-end;
+}
+.account-drawer {
+  background: #FFF; width: 100%; max-width: 360px; height: 100%; display: flex; flex-direction: column;
+}
+.drawer-header {
+  background: #0A192F; color: #FFF; padding: 20px 16px; position: relative;
+}
+.drawer-close {
+  position: absolute; top: 14px; right: 16px; background: transparent;
+  border: none; color: #FFF; font-size: 20px; cursor: pointer;
+}
+.drawer-user-info { display: flex; align-items: center; gap: 10px; }
+.user-logo-circle {
+  width: 44px; height: 44px; border-radius: 50%; background: #22C55E;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.user-status { font-size: 14px; font-weight: 800; }
+.user-substatus { font-size: 11.5px; opacity: 0.8; }
+.drawer-menu-list { flex: 1; overflow-y: auto; padding: 10px 0; }
+.drawer-section-title {
+  padding: 8px 16px 4px 16px; font-size: 10.5px; font-weight: 800;
+  color: #94A3B8; text-transform: uppercase;
+}
+.menu-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 16px; border-bottom: 1px solid #F1F5F9; cursor: pointer;
+}
+.menu-icon { font-size: 18px; }
+.item-title { font-size: 13px; font-weight: 700; color: #1E293B; }
+.item-sub { font-size: 11px; color: var(--text-muted); }
+.danger-text { color: #EF4444; }
+
+.modal-card-box {
+  background: #FFF; border-radius: 12px; padding: 20px;
+  width: 100%; max-width: 420px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+.modal-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.modal-card-header h3 { font-size: 16px; font-weight: 800; color: #0A192F; }
+.modal-btn-close { background: none; border: none; font-size: 18px; color: #64748B; cursor: pointer; }
+
+.btn-back {
+  background: transparent; border: none; color: #0F172A;
+  font-size: 13.5px; font-weight: 800; cursor: pointer;
+  margin-bottom: 12px; display: inline-flex; align-items: center; gap: 4px;
+}
+.btn-book-final {
+  width: 100%; background: #0A192F; color: #FFFFFF; border: none;
+  padding: 13px; border-radius: 8px; font-size: 14.5px; font-weight: 800; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-book-final:active { opacity: 0.9; }
+
+/* 7. FINTECH WALLET SYSTEM (BANK DETAILS, IFSC & UPI STYLING) */
+.wallet-card-summary {
+  background: linear-gradient(135deg, #0A192F 0%, #1E3A8A 100%);
+  color: #FFF;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(10, 25, 47, 0.2);
+}
+.wallet-bal-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+.wallet-bal-amount {
+  font-size: 28px;
+  font-weight: 900;
+  margin: 6px 0 12px 0;
+  color: #22C55E;
+}
+.wallet-action-row {
+  display: flex;
+  gap: 8px;
+}
+.btn-wallet-action {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFF;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+.btn-wallet-action:hover {
+  background: #FFF;
+  color: #0A192F;
+}
+
+.saved-payout-box {
+  background: #F0FDF4;
+  border: 1.5px solid #86EFAC;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.saved-payout-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #166534;
+  margin-bottom: 4px;
+}
+.saved-payout-desc {
+  font-size: 11px;
+  color: #334155;
+  margin-bottom: 8px;
+}
+.saved-payout-btns {
+  display: flex;
+  gap: 6px;
+}
+.btn-payout-confirm {
+  background: #16A34A;
+  color: #FFF;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn-payout-change {
+  background: #FFF;
+  color: #475569;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ifsc-verified-badge {
+  color: #16A34A;
+  font-size: 10.5px;
+  font-weight: 800;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 8. FIRST-LAUNCH MANDATORY TERMS CONSENT MODAL (PLAY STORE & KYC COMPLIANCE) */
+.mandatory-terms-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 25, 47, 0.92);
+  backdrop-filter: blur(5px);
+  z-index: 3000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.mandatory-terms-card {
+  background: #FFF;
+  border-radius: 14px;
+                    
