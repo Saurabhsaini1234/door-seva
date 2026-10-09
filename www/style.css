@@ -796,7 +796,7 @@ body {
   gap: 4px;
 }
 
-/* 8. FIRST-LAUNCH MANDATORY TERMS CONSENT MODAL (PLAY STORE & KYC COMPLIANCE) */
+/* 8. FIRST-LAUNCH MANDATORY TERMS CONSENT MODAL */
 .mandatory-terms-overlay {
   position: fixed;
   inset: 0;
@@ -830,6 +830,22 @@ body {
   color: #334155;
   line-height: 1.6;
   margin: 12px 0;
+}
+
+/* 9. PIN CODE LARGE DISPLAY (SUCCESS) */
+.pin-display-box {
+  background: #FEF3C7;
+  border: 1.5px dashed #D97706;
+  border-radius: 10px;
+  padding: 14px;
+  margin: 14px 0;
+}
+.pin-code-large {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #B45309;
+  margin: 6px 0;
 }
 
 /* FOOTER */
