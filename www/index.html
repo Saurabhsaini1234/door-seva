@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DoorSeva - Sachint Enterprises</title>
+  
+  <meta name="theme-color" content="#2A0845" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- External SDKs -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <!-- MapmyIndia (Mappls) Live SDK with Your API Key -->
+  <script src="https://apis.mappls.com/advancedmaps/api/vfsrbnhjdotpfjskxrfizvdcljvmnqayogml/map_sdk?layer=vector&v=3.0" defer></script>
+</head>
+<body>
+
+  <!-- Invisible reCAPTCHA Container -->
+  <div id="recaptcha-container"></div>
+
+  <!-- FIRST-LAUNCH MANDATORY TERMS & CONDITIONS POPUP (PLAY STORE & KYC COMPLIANCE) -->
+  <div id="mandatoryTermsModal" class="mandatory-terms-overlay">
+    <div class="mandatory-terms-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E2E8F0; padding-bottom:8px;">
+        <h3 style="color:#0A192F; font-size:15.5px; font-weight:800;">🛡️ DoorSeva Terms & User Agreement</h3>
+        <span style="font-size:11px; background:#DCFCE7; color:#166534; font-weight:800; padding:2px 8px; border-radius:12px;">MANDATORY</span>
+      </div>
+      
+      <div class="terms-scroll-body">
+        <p style="font-weight:700; color:#0A192F; margin-bottom:6px;">Welcome to DoorSeva (Operated by Sachint Enterprises | GSTIN: 09IATPS9376A1ZR):</p>
+        <p style="background:#FFF1F2; border-left:3px solid #DC2626; padding:6px 8px; margin-bottom:8px; border-radius:4px; font-size:11.5px; color:#991B1B;">
+          ⚠️ <strong>Advance Cash Strict Prohibition (एडवांस कैश निषेध):</strong> किसी भी सर्विस पार्टनर को काम से पहले कोई भी एडवांस कैश पेमेंट न दें; काम पूरा संतोषजनक होने के बाद ही नकद भुगतान करें। यदि आप पार्टनर को एडवांस कैश देते हैं, तो उसके स्वयं जिम्मेदार होंगे, डोरसेवा नहीं। डोरसेवा केवल प्लेटफॉर्म के माध्यम से किए गए <strong>ऑनलाइन भुगतान (Online Payment)</strong> को ही रिटर्न, कैंसिल व रिफंड करती है।
+        </p>
+        <p>1. <strong>Clinical Services:</strong> Doctor's prescription is strictly mandatory for Injections (IM/IV), Foley's catheter, Ryles tube, and mucus suction. AST sensitivity test is mandatory before any antibiotic injection.</p>
+        <p>2. <strong>24-Hour Live-in Rule:</strong> In all 24-hour live-in services (Elder Care, Maid, Japa Care, Male Caretaker), three basic daily meals and safe resting quarters must be provided by the customer.</p>
+        <p>3. <strong>Home Maintenance:</strong> Fares represent service/labour charges only. Required spare parts, wires, or plumbing hardware must be provided by the customer or purchased at actual retail cost.</p>
+        <p>4. <strong>Women Safety:</strong> Women salon and domestic helper fleets are 100% female professionals. Safe indoor working environment is mandatory.</p>
+        <p>5. <strong>Arrival SLA:</strong> If the assigned partner fails to arrive within 30-40 minutes of booking confirmation, you are eligible for immediate free cancellation.</p>
+        <p>6. <strong>Subscription Cancellation:</strong> Pro-rata refunds apply for unused days. For 30-day plans, cancellations made after 20 days of service yield no refund.</p>
+        <p>7. <strong>Wallet Refund & Instant Withdrawal:</strong> All verified refunds are credited immediately to your DoorSeva Wallet and are 24x7 withdrawable directly to your verified Bank Account or UPI ID.</p>
+      </div>
+
+      <label style="display:flex; align-items:flex-start; gap:8px; font-size:11.5px; font-weight:700; color:#0A192F; margin-bottom:12px; cursor:pointer;">
+        <input type="checkbox" id="chkEntryTermsConsent" style="margin-top:2px;" />
+        <span>I have read, understood, and accept DoorSeva Master Terms (including No-Advance Cash & Online Refund Policy).</span>
+      </label>
+
+      <button type="button" class="btn-book-final" onclick="acceptMandatoryTerms()">
+        Accept & Enter DoorSeva →
+      </button>
+    </div>
+  </div>
+
+  <!-- TOP APP BAR -->
+  <header class="fk-top-header">
+    <div class="fk-brand-row">
+      <div class="fk-logo-area" onclick="navigateToHome()">
+        <span class="fk-logo-icon">🛡️</span>
+        <span class="fk-logo-text" id="ui-appName">DoorSeva</span>
+      </div>
+      <div class="fk-header-actions">
+        <!-- TOP HEADER CART BUTTON -->
+        <button id="headerCartBtn" onclick="openCartScreen()" style="background:#FFFFFF; border:none; border-radius:6px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-weight:700; color:#1E1B4B; margin-right:8px; font-size:13px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1E1B4B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span id="headerCartBadge" style="background:#22C55E; color:#FFFFFF; border-radius:50%; width:20px; height:20px; display:none; align-items:center; justify-content:center; font-size:11px; font-weight:800;">0</span>
+        </button>
+
+        <!-- Dual Language Selector -->
+        <select id="languageSelect" class="fk-lang-select" onchange="switchGlobalLanguage(this.value)">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी</option>
+        </select>
+        <button class="fk-btn-account" id="btnOpenDrawer" onclick="openDrawer()">☰</button>
+      </div>
+    </div>
+
+    <!-- LIVE LOCATION STRIP (MAPMYINDIA POWERED) -->
+    <div class="fk-location-strip" onclick="openCityModal()">
+      <span class="fk-pin-icon">📍</span>
+      <div class="fk-location-texts">
+        <div class="fk-loc-primary">
+          <span id="locPrimaryLandmark">Detecting Live Location...</span>
+          <span class="fk-arrow-down">▼</span>
+        </div>
+        <span class="fk-loc-secondary" id="locSecondaryAddress">Connecting to Mappls Satellite...</span>
+      </div>
+      <button type="button" id="btnDetectGps" class="fk-btn-gps" onclick="event.stopPropagation(); triggerGpsAutoDetect();">
+        🎯 Auto GPS
+      </button>
+    </div>
+
+    <!-- SEARCH BAR WITH D AI ACTION BUTTON -->
+    <div class="fk-search-row-container" style="display:flex; align-items:center; gap:8px; padding:6px 12px;">
+      <div class="fk-search-box" style="flex:1; margin-bottom:0;">
+        <span class="fk-search-lens">🔍</span>
+        <input type="text" id="serviceSearchInput" class="fk-search-input" placeholder="Search for nurse, electrician, maid, salon..." oninput="handleServiceSearch(this.value)" />
+      </div>
+      <button type="button" id="btnDaiTrigger" onclick="openDaiModal()" class="btn-dai-pulse" title="DoorSeva AI Voice & Visual Assistant">
+        ✨ D AI
+      </button>
+    </div>
+
+    <!-- QUICK CATEGORY TABS (5 Updated Tabs) -->
+    <div class="fk-quick-tabs" id="quickCategoryTabs">
+      <div class="fk-tab-chip active" id="tab_ALL" onclick="filterByCluster('ALL')">
+        <span class="fk-tab-icon">✨</span>
+        <span class="fk-tab-name" id="ui-tabAll">All Services</span>
+      </div>
+      <div class="fk-tab-chip" id="tab_cluster_health" onclick="filterByCluster('cluster_health')">
+        <span class="fk-tab-icon">🩺</span>
+        <span class="fk-tab-name" id="ui-tabHealth">Health Services</span>
+      </div>
+      <div class="fk-tab-chip" id="tab_cluster_beauty" onclick="filterByCluster('cluster_beauty')">
+        <span class="fk-tab-icon">💄</span>
+        <span class="fk-tab-name" id="ui-tabBeauty">Beauty and Salon</span>
+      </div>
+      <div class="fk-tab-chip" id="tab_cluster_maintenance" onclick="filterByCluster('cluster_maintenance')">
+        <span class="fk-tab-icon">🔧</span>
+        <span class="fk-tab-name" id="ui-tabMaintenance">Home Maintenance</span>
+      </div>
+      <div class="fk-tab-chip" id="tab_cluster_maid_cook" onclick="filterByCluster('cluster_maid_cook')">
+        <span class="fk-tab-icon">🍳</span>
+        <span class="fk-tab-name" id="ui-tabMaidCook">Home Cook and Maid</span>
+      </div>
+    </div>
+  </header>
+
+  <span id="zoneDisplay" style="display: none;">Standard Rate</span>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+    <section class="hero-slider-section" id="heroSlider"></section>
+    
+    <!-- Multi-Select Floating Action Bar -->
+    <div id="selectionActionBar" class="selection-floating-bar" style="display:none;">
+      <div class="selection-bar-info">
+        <span id="selectedServicesCount">1 Service Selected</span>
+      </div>
+      <div class="selection-bar-btns">
+        <button class="btn-clear-selection" onclick="clearServiceSelection()">Reset</button>
+        <button class="btn-continue-selection" onclick="proceedSelectedToModal()">Continue →</button>
+      </div>
+    </div>
+
+    <main id="appRoot"></main>
+  </div>
+
+  <!-- D AI MODAL (VOICE & CAMERA SEARCH) -->
+  <div id="daiModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 20px;">
+    <div class="modal-card-box" style="max-width: 440px; text-align: center;">
+      <div class="modal-card-header">
+        <h3 style="color:#2A0845; display:flex; align-items:center; gap:8px;">✨ D AI Smart Search Assistant</h3>
+        <button onclick="closeDaiModal()" class="modal-btn-close">✕</button>
+      </div>
+      <p style="font-size: 12px; color: #64748B; margin: 8px 0 16px;">
+        Boliye ya photo upload kijiye — DoorSeva AI aapke liye sahi service turant dhoondh nikalega.
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+        <!-- Voice Mic -->
+        <div class="dai-action-card" onclick="startVoiceRecognition()">
+          <div class="dai-icon-circle" id="micIconCircle">🎙️</div>
+          <strong style="font-size:13px; color:#1E1B4B; display:block; margin-top:6px;">Boliye (Mic)</strong>
+          <span style="font-size:10.5px; color:#6B7280;" id="micStatusText">Tap karke bole</span>
+        </div>
+
+        <!-- Camera / Photo -->
+        <div class="dai-action-card" onclick="triggerAiPhotoUpload()">
+          <div class="dai-icon-circle">📸</div>
+          <strong style="font-size:13px; color:#1E1B4B; display:block; margin-top:6px;">Photo / Camera</strong>
+          <span style="font-size:10.5px; color:#6B7280;">Problem ki photo dale</span>
+          <input type="file" id="daiPhotoInput" accept="image/*" capture="environment" style="display:none;" onchange="handleAiPhotoSearch(event)" />
+        </div>
+      </div>
+
+      <div id="daiStatusResult" style="min-height:24px; font-size:12px; font-weight:700; color:#4338CA;"></div>
+    </div>
+  </div>
+
+  <!-- BOOKING CUSTOMIZATION NEXT WINDOW MODAL -->
+  <div id="nextBookingWindowModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 12px;">
+    <div class="modal-card-box" style="max-width: 580px; width: 100%; max-height: 94vh; display: flex; flex-direction: column;">
+      <div class="modal-card-header">
+        <h3 id="bookingModalServiceTitle" style="color: #2A0845; font-size:16px;">Service Customization</h3>
+        <button onclick="closeBookingModal()" class="modal-btn-close">✕</button>
+      </div>
+
+      <div class="booking-modal-scroll" style="overflow-y:auto; flex:1; padding-right:4px;">
+        
+        <!-- TOP: Subscription / Plans Pills -->
+        <div class="booking-section-group">
+          <label class="booking-sec-label">Choose Plan / Subscription:</label>
+          <div id="modalPlansContainer" class="plans-chip-grid"></div>
+        </div>
+
+        <!-- 2-COLUMN SPLIT: LEFT (Quantity) & RIGHT (Calendar Date) -->
+        <div class="booking-split-row" style="display:flex; gap:12px; margin-top:12px;">
+          
+          <!-- LEFT: Dynamic Quantity Selector -->
+          <div class="booking-split-col" id="colQuantityContainer" style="flex:1;">
+            <label class="booking-sec-label" id="modalQuantityTitle">Quantity:</label>
+            <div class="quantity-counter-box" style="display:flex; align-items:center; gap:10px; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:6px 12px; width:fit-content;">
+              <button type="button" class="btn-qty" onclick="changeModalQuantity(-1)">−</button>
+              <span id="modalQuantityValue" style="font-size:15px; font-weight:800; min-width:24px; text-align:center;">1</span>
+              <button type="button" class="btn-qty" onclick="changeModalQuantity(1)">+</button>
+            </div>
+            <span id="modalQuantitySub" style="font-size:10px; color:#64748B; display:block; margin-top:4px;">Select count</span>
+          </div>
+
+          <!-- RIGHT: Advance Booking Calendar Date Picker -->
+          <div class="booking-split-col" style="flex:1;">
+            <label class="booking-sec-label" id="modalCalendarLabel">Booking Date (Calendar):</label>
+            <input type="date" id="bookingScheduleDate" class="form-input" style="padding:7px 10px; font-weight:700;" />
+          </div>
+        </div>
+
+        <!-- FORM FIELDS -->
+        <div class="booking-form-fields" style="margin-top:14px;">
+          <!-- Customer Name -->
+          <div class="form-group" style="margin-bottom:8px;">
+            <label class="field-label">Full Name:</label>
+            <input type="text" id="custNameInput" class="form-input" placeholder="Your full name" />
+          </div>
+
+          <!-- Mobile Number with Female Partner Notice -->
+          <div class="form-group" style="margin-bottom:8px;">
+            <label class="field-label">Mobile Number:</label>
+            <input type="tel" id="custPhoneInput" class="form-input" placeholder="10-digit mobile number" maxlength="10" />
+            <div id="femaleSpecialNotice" style="display:none; background:#FFF1F2; border-left:3px solid #E11D48; padding:6px 8px; font-size:11px; color:#9F1239; margin-top:4px; border-radius:4px;">
+              ⚠️ <strong>Women Safety Note:</strong> Please ensure the contact number belongs to the female client/beneficiary directly.
+            </div>
+          </div>
+
+          <!-- Full Address -->
+          <div class="form-group" style="margin-bottom:8px;">
+            <label class="field-label">Service Address (Ghar ka pata):</label>
+            <textarea id="custAddressInput" class="form-textarea" rows="2" placeholder="House number, landmark, street..."></textarea>
+          </div>
+
+          <!-- Description Box -->
+          <div class="form-group" style="margin-bottom:8px;">
+            <label class="field-label">Service Requirement Details (A to Z Description):</label>
+            <textarea id="custDescriptionInput" class="form-textarea" rows="2" placeholder="Apni zarurat aur service detail yahan likhein..."></textarea>
+          </div>
+
+          <!-- Prescription / Photo Upload Section -->
+          <div id="uploadAttachmentContainer" class="form-group" style="margin-bottom:8px; display:none;">
+            <label class="field-label" id="uploadAttachmentLabel">Upload Document / Photo:</label>
+            <input type="file" id="custAttachmentFile" class="form-input" style="padding:6px;" />
+            <span id="uploadHintText" style="font-size:10px; color:#64748B; display:block; margin-top:2px;"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM ACTION BUTTONS -->
+      <div class="modal-bottom-actions" style="display:flex; gap:10px; padding-top:12px; border-top:1px solid #E2E8F0; margin-top:8px;">
+        <button type="button" class="btn-add-cart-outline" onclick="submitModalToCart()" style="flex:1;">
+          🛒 Add to Cart
+        </button>
+        <button type="button" class="btn-book-now-solid" onclick="submitModalDirectBooking()" style="flex:1;">
+          ⚡ Book Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIVERSAL CART MODAL -->
+  <div id="cartModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 14px;">
+    <div class="modal-card-box" style="max-width: 520px; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-card-header">
+        <h3 id="ui-cartHeading" style="color: #2A0845;">🛒 DoorSeva Cart & Checkout</h3>
+        <button onclick="closeCartScreen()" class="modal-btn-close">✕</button>
+      </div>
+
+      <!-- Home Nursing Advisory -->
+      <div id="nursingNoticeInCart" style="display:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:6px; padding:8px; font-size:11px; color:#1E40AF; margin-bottom:10px;">
+        🩺 <strong>Doctor's Prescription Notice:</strong> Nursing services require verified doctor instructions at the time of visit.
+      </div>
+
+      <!-- Items List -->
+      <div id="cartItemsList" style="overflow-y:auto; flex:1; max-height:360px; margin-bottom:12px;"></div>
+
+      <!-- Cart Summary Calculation -->
+      <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:10px; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+          <span>Items Total (Standard COD):</span>
+          <span id="cartSubtotalText">₹0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:800; color:#0F172A;">
+          <span>Grand Total Payable:</span>
+          <span id="cartGrandTotalText" style="color:#16A34A;">₹0</span>
+        </div>
+      </div>
+
+      <!-- Payment Choice & Checkout -->
+      <div style="display:flex; gap:10px;">
+        <button class="btn-checkout-cod" onclick="executeCheckout('COD')" style="flex:1;">
+          💵 Cash on Delivery (COD)
+        </button>
+        <button class="btn-checkout-online" onclick="executeCheckout('ONLINE')" style="flex:1;">
+          💳 Pay Online (20% Off)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINTECH WALLET MODAL (BANK IFSC & UPI DESTINATION) -->
+  <div id="walletModal" class="account-drawer-overlay" style="align-items: center; justify-content: center; padding: 16px;">
+    <div class="modal-card-box" style="max-width: 460px; width: 100%; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-card-header">
+        <h3 style="color: #0A192F;">👛 DoorSeva Wallet & Payouts</h3>
+        <button onclick="closeWalletModal()" class="modal-btn-close">✕</button>
+      </div>
+
+      <!-- Wallet Balance Header Card -->
+      <div class="wallet-card-summary">
+        <div class="wallet-bal-label">Available Refund & Cashout Balance</div>
+        <div class="wallet-bal-amount" id="userWalletBalDisplay">₹0</div>
+        <div class="wallet-action-row">
+          <button type="button" class="btn-wallet-action" onclick="showAddBankForm()">🏦 Add Bank</button>
+          <button type="button" class="btn-wallet-action" onclick="showAddUpiForm()">⚡ Add UPI</button>
+          <button type="button" class="btn-wallet-action" style="background:#22C55E; color:#0A192F;" onclick="triggerInstantWalletWithdrawal()">Withdraw</button>
+        </div>
+      </div>
+
+      <!-- Saved Payout Confirmation -->
+      <div id="savedPayoutContainer" style="display:none;"></div>
+
+      <!-- Form: Add Bank Details (With Live IFSC Verification) -->
+      <div id="payoutBankForm" style="display:none
