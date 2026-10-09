@@ -1,0 +1,6 @@
+{
+  "appId": "in.doorseva.customer",
+  "appName": "DoorSeva",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
