@@ -1,0 +1,52 @@
+name: Build Full Android Native APK (DoorSeva)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Move Subfolder Files to Root
+        run: |
+          if [ -d "Door seva" ]; then
+            cp -r "Door seva"/* . || true
+          fi
+
+      - name: Set up Node.js Engine
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Set up Java Development Kit (JDK 17)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install Project Dependencies
+        run: |
+          npm install
+
+      - name: Initialize Android Native Project
+        run: |
+          npx cap add android || true
+          npx cap sync android
+
+      - name: Build Full Native APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload Finished APK (20MB-50MB)
+        uses: actions/upload-artifact@v4
+        with:
+          name: DoorSeva-Official-Release
+          path: android/app/build/outputs/apk/debug/app-debug.apk
