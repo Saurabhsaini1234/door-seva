@@ -42,18 +42,20 @@ jobs:
             "bundledWebRuntime": false
           }
           EOF
-          npm install
+          npm init -y
+          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
 
-      - name: Sync Android Native Project
+      - name: Sync and Create Android Native Project
         run: |
-          npx cap add android || true
+          rm -rf android
+          npx cap add android
           npx cap sync android
 
       - name: Build Full Native APK with Gradle
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload Finished APK (20MB-50MB)
         uses: actions/upload-artifact@v4
