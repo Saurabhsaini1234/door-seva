@@ -13,11 +13,13 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Move Subfolder Files to Root
+      - name: Prepare Root and Web Directory
         run: |
           if [ -d "Door seva" ]; then
             cp -r "Door seva"/* . || true
           fi
+          mkdir -p www
+          cp -r index.html style.css app.js data.js translate.js india_location_directory.js images www/ 2>/dev/null || true
 
       - name: Set up Node.js Engine
         uses: actions/setup-node@v4
@@ -30,11 +32,19 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Install Project Dependencies
+      - name: Configure Capacitor and Dependencies
         run: |
+          cat << 'EOF' > capacitor.config.json
+          {
+            "appId": "com.doorseva.app",
+            "appName": "DoorSeva",
+            "webDir": "www",
+            "bundledWebRuntime": false
+          }
+          EOF
           npm install
 
-      - name: Initialize Android Native Project
+      - name: Sync Android Native Project
         run: |
           npx cap add android || true
           npx cap sync android
