@@ -1,0 +1,9 @@
+{
+  "appId": "in.doorseva.app",
+  "appName": "DoorSeva",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "doorseva-app",
+  "version": "1.0.0",
+  "description": "DoorSeva Verified Home Services Platform",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Build done'"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
+  }
+}
